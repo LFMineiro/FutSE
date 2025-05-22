@@ -1,15 +1,26 @@
+import AddPlayerModal from "@/components/Dashboard/modalAddPlayer";
 import AddTeamModal from "@/components/Dashboard/modalAddTeam";
+import { db } from "@/firebase/config";
 import { createTeam } from "@/services/teamServices";
-import { useState } from "react";
+import { collection, getDocs } from "firebase/firestore";
+import { useEffect, useState } from "react";
 import { Alert, Button, ScrollView, StyleSheet, Text, View } from "react-native";
 
 export default function Dashboard() {
+
+  type Team = {
+    id: string;
+    name:string;
+    createAt: any;
+  }
 
 
   const [modalTeamVisible, setModalTeamVisible] = useState(false);
   const [modalPlayerVisible, setModalPlayerVisible] = useState(false);
 
   const [teamName, setTeamName] = useState("")
+  const [playerName, setPlayerName] = useState("")
+  const [teams, setTeams] = useState<Team[]>([])
 
   const handleAddTeam = async (teamName : string) => {
       await createTeam(teamName)
@@ -17,10 +28,29 @@ export default function Dashboard() {
       setTeamName("")
     
   }
-
-   const filterTeams = () => {
-        
+  const handleAddPlayer = async (teamName : string) => {
+      await createTeam(teamName)
+      setModalTeamVisible(false)
+      setTeamName("")
+    
+  }
+  {/* Foi usado os as Team[] para força a tipagem correta, já que estava dando erro*/}
+   const getTeams = async () => {
+      const data = await getDocs(collection(db, "teams"));
+      const teamsData = data.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as Team[];
+      setTeams(teamsData);
     }
+
+    useEffect(() => {
+      getTeams()
+    }, [])
+
+    useEffect(()=> {
+
+    })
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -43,12 +73,15 @@ export default function Dashboard() {
       <View style={styles.section}>
         <Text style={styles.title}>Equipes do Torneio</Text>
 
+          {teams.map((team)  => (
         <View style={styles.teamCard}>
-          <Text>Computadores</Text>
+            <Text key={team.id}>
+              {team.name}
+            </Text>
         </View>
-        <View style={styles.teamCard}>
-          <Text>Cartógrafos</Text>
-        </View>
+          )
+          )}
+
       </View>
       {/* Modais */}
       <AddTeamModal 
@@ -57,6 +90,14 @@ export default function Dashboard() {
       onSave={handleAddTeam}
       value={teamName}
       onChange={setTeamName}
+      getTeams={getTeams}
+        />
+        <AddPlayerModal 
+        onClose = {() => {setModalPlayerVisible(false)}}
+        visible={modalPlayerVisible}
+        onSave={()=> {handleAddPlayer}}
+        value={playerName}
+        onChange={setPlayerName}
         />
     </ScrollView>
   );

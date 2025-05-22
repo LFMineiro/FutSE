@@ -7,15 +7,15 @@ type Props = {
   onSave: (text: string) => void;
   value: string;
   onChange: (text: string) => void;
+  getTeams: () => void;
 };
 
-export default function AddTeamModal({ visible, onClose, onSave, value, onChange }: Props) {
-    const [teamName, setTeamName] = useState(value)
+export default function AddTeamModal({ visible, onClose, onSave, value, onChange, getTeams }: Props) {
 
 
     const handleSave = () => {
-        onSave(teamName)
-        setTeamName("")
+        onSave(value)
+        getTeams()
     }
 
    

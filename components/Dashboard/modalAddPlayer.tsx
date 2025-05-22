@@ -8,17 +8,29 @@ type Props = {
   onChange: (text: string) => void;
 };
 
-export default function AddTeamModal({ visible, onClose, onSave, value, onChange }: Props) {
+export default function AddPlayerModal({ visible, onClose, onSave, value, onChange }: Props) {
 
 
   return (
     <Modal visible={visible} animationType="slide" transparent>
          <View style={styles.modalOverlay}>
         <View style={styles.modalContent}>
-          <Text style={styles.modalTitle}>Adicionar Equipe</Text>
+          <Text style={styles.modalTitle}>Adicionar Jogador</Text>
           <TextInput
             style={styles.input}
-            placeholder="Nome da equipe"
+            placeholder="Nome do Jogador"
+            value={value}
+            onChangeText={onChange}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Nome do Jogador"
+            value={value}
+            onChangeText={onChange}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Nome do Jogador"
             value={value}
             onChangeText={onChange}
           />
