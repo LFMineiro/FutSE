@@ -1,16 +1,24 @@
+import { useState } from "react";
 import { Modal, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
 type Props = {
   visible: boolean;
   onClose: () => void;
-  onSave: () => void;
+  onSave: (text: string) => void;
   value: string;
   onChange: (text: string) => void;
 };
 
 export default function AddTeamModal({ visible, onClose, onSave, value, onChange }: Props) {
+    const [teamName, setTeamName] = useState(value)
 
 
+    const handleSave = () => {
+        onSave(teamName)
+        setTeamName("")
+    }
+
+   
   return (
     <Modal visible={visible} animationType="slide" transparent>
          <View style={styles.modalOverlay}>
@@ -23,7 +31,7 @@ export default function AddTeamModal({ visible, onClose, onSave, value, onChange
             onChangeText={onChange}
           />
           <View style={styles.modalButtons}>
-            <Pressable onPress={onSave} style={styles.modalButton}>
+            <Pressable onPress={handleSave} style={styles.modalButton}>
               <Text>Salvar</Text>
             </Pressable>
             <Pressable onPress={onClose} style={styles.modalButton}>

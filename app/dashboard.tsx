@@ -1,6 +1,7 @@
 import AddTeamModal from "@/components/Dashboard/modalAddTeam";
+import { createTeam } from "@/services/teamServices";
 import { useState } from "react";
-import { Button, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Alert, Button, ScrollView, StyleSheet, Text, View } from "react-native";
 
 export default function Dashboard() {
 
@@ -10,13 +11,16 @@ export default function Dashboard() {
 
   const [teamName, setTeamName] = useState("")
 
-  const handleAddTeam = () => {
-    console.log("Equipe adicionada:", teamName);
-    setModalTeamVisible(false);
-    setTeamName("");
+  const handleAddTeam = async (teamName : string) => {
+      await createTeam(teamName)
+      setModalTeamVisible(false)
+      setTeamName("")
+    
   }
 
-
+   const filterTeams = () => {
+        
+    }
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -29,7 +33,9 @@ export default function Dashboard() {
 
         <View style={styles.buttonRow}>
           <Button title="Adicionar Jogador" onPress={() => {setModalPlayerVisible(true)}} />
-          <Button title="Adicionar Equipe" onPress={() => {setModalTeamVisible(true)}} />
+          <Button title="Adicionar Equipe" onPress={() => {setModalTeamVisible(true)}}
+           />
+
         </View>
       </View>
 
