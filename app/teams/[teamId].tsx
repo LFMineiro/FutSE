@@ -2,15 +2,11 @@ import { useLocalSearchParams } from "expo-router";
 import { View, Text, FlatList, StyleSheet } from "react-native";
 import { useEffect, useState } from "react";
 import { getPlayers } from "../../services/playersServices"; 
+import { Player } from "@/types";
 
 export default function TeamPage() {
 
-type Player = {
-    id: string;
-    name: string;
-    goals: number;
-    assists: number;
-    };
+
 
   const { teamId } = useLocalSearchParams();
   const [players, setPlayers] = useState<Player[]>([]);

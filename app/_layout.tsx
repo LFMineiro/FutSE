@@ -31,13 +31,7 @@ export default function Layout() {
           // tabBarIcon: () => <Icon name="person" />,
         }}
       />
-      <Tabs.Screen
-        name="settings"
-        options={{
-          title: "Configurações",
-          // tabBarIcon: () => <Icon name="settings" />,
-        }}
-      />
+
     </Tabs>
   );
 }

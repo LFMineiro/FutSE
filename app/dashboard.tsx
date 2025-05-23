@@ -2,7 +2,8 @@ import AddPlayerModal from "@/components/Dashboard/modalAddPlayer";
 import AddTeamModal from "@/components/Dashboard/modalAddTeam";
 import { db } from "@/firebase/config";
 import { getPlayers } from "@/services/playersServices";
-import { createTeam } from "@/services/teamServices";
+import { createTeam, getTeams } from "@/services/teamServices";
+import { Team } from "@/types";
 import { useRouter } from "expo-router";
 import { collection, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
@@ -10,11 +11,7 @@ import { Alert, Button, ScrollView, StyleSheet, Text, View } from "react-native"
 
 export default function Dashboard() {
 
-  type Team = {
-    id: string;
-    name:string;
-    createAt: any;
-  }
+ 
 
   const router = useRouter()
 
@@ -41,22 +38,16 @@ export default function Dashboard() {
     
   }
   {/* Foi usado o as Team[] para força a tipagem correta, já que estava dando erro*/}
-   const getTeams = async () => {
-      const data = await getDocs(collection(db, "teams"));
-      const teamsData = data.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as Team[];
-      setTeams(teamsData);
-    }
-
     useEffect(() => {
-      getTeams()
+      const fetchTeams = async() => {
+       const data = await getTeams() as Team[]
+       setTeams(data)
+      }
+      fetchTeams()
     }, [])
 
-    useEffect(()=> {
 
-    })
+
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
