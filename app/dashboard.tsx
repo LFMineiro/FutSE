@@ -3,6 +3,7 @@ import AddTeamModal from "@/components/Dashboard/modalAddTeam";
 import { db } from "@/firebase/config";
 import { getPlayers } from "@/services/playersServices";
 import { createTeam } from "@/services/teamServices";
+import { useRouter } from "expo-router";
 import { collection, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { Alert, Button, ScrollView, StyleSheet, Text, View } from "react-native";
@@ -15,6 +16,7 @@ export default function Dashboard() {
     createAt: any;
   }
 
+  const router = useRouter()
 
   const [modalTeamVisible, setModalTeamVisible] = useState(false);
   const [modalPlayerVisible, setModalPlayerVisible] = useState(false);
@@ -32,13 +34,13 @@ export default function Dashboard() {
       setTeamName("")
     
   }
-  const handleAddPlayer = async (teamName : string) => {
+  const handleAddPlayer = async (teamName: string) => {
       await createTeam(teamName)
       setModalTeamVisible(false)
       setTeamName("")
     
   }
-  {/* Foi usado os as Team[] para força a tipagem correta, já que estava dando erro*/}
+  {/* Foi usado o as Team[] para força a tipagem correta, já que estava dando erro*/}
    const getTeams = async () => {
       const data = await getDocs(collection(db, "teams"));
       const teamsData = data.docs.map((doc) => ({
@@ -79,7 +81,7 @@ export default function Dashboard() {
 
           {teams.map((team)  => (
         <View style={styles.teamCard}>
-            <Text key={team.id} style={styles.teamTitle}>
+            <Text key={team.name} style={styles.teamTitle}>
               {team.name}
             </Text>
             <View style={styles.buttonRow}>
@@ -87,7 +89,8 @@ export default function Dashboard() {
                 setSelectedTeam(team.id)
                 setModalPlayerVisible(true)
                 }} />
-                <Button title="Ver Time" />
+                <Button title="Ver Time" onPress={() => router.push(`./teams/${team.id}`)}/>
+                {/* <Button title="Ver Time" onPress={() => router.push('/teams/[teamId]')}/> */}
           </View>
         </View>
           )

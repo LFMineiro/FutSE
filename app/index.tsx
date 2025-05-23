@@ -1,13 +1,13 @@
 import { Link } from "expo-router";
-import { Button, StyleSheet, Text, View } from "react-native";
+import { Button, Image, StyleSheet, Text, View } from "react-native";
 
 export default function Index() {
   return (
     <View style={styles.container}>
+    {/* <Image source="../assets/images/icon.jpeg" /> */}
       <Text style={styles.title}>Gerenciador de Torneios</Text>
       
       <Button title="Adicionar Torneio" onPress={() => {}} />
-
       <View style={styles.card}>
         <Text style={styles.subtitle}>Lista dos Torneios</Text>
         <Link href="/dashboard">
