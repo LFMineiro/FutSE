@@ -1,5 +1,6 @@
 import AddPlayerModal from "@/components/Dashboard/modalAddPlayer";
 import AddTeamModal from "@/components/Dashboard/modalAddTeam";
+import TeamCard from "@/components/Dashboard/teamCard";
 import { db } from "@/firebase/config";
 import { getPlayers } from "@/services/playersServices";
 import { createTeam, getTeams } from "@/services/teamServices";
@@ -29,6 +30,7 @@ export default function Dashboard() {
       await createTeam(teamName)
       setModalTeamVisible(false)
       setTeamName("")
+      fetchTeams()
     
   }
   const handleAddPlayer = async (teamName: string) => {
@@ -38,11 +40,11 @@ export default function Dashboard() {
     
   }
   {/* Foi usado o as Team[] para força a tipagem correta, já que estava dando erro*/}
+  const fetchTeams = async() => {
+   const data = await getTeams() as Team[]
+   setTeams(data)
+  }
     useEffect(() => {
-      const fetchTeams = async() => {
-       const data = await getTeams() as Team[]
-       setTeams(data)
-      }
       fetchTeams()
     }, [])
 
@@ -67,27 +69,19 @@ export default function Dashboard() {
       </View>
 
       {/* Equipes */}
-      <View style={styles.section}>
+      <ScrollView style={styles.section}>
         <Text style={styles.title}>Equipes do Torneio</Text>
 
           {teams.map((team)  => (
-        <View style={styles.teamCard}>
-            <Text key={team.name} style={styles.teamTitle}>
-              {team.name}
-            </Text>
-            <View style={styles.buttonRow}>
-              <Button title="Adicionar Jogador" onPress={() => {
-                setSelectedTeam(team.id)
-                setModalPlayerVisible(true)
-                }} />
-                <Button title="Ver Time" onPress={() => router.push(`./teams/${team.id}`)}/>
-                {/* <Button title="Ver Time" onPress={() => router.push('/teams/[teamId]')}/> */}
-          </View>
-        </View>
+            <TeamCard 
+            key={team.id}
+          team={team}
+          setSelectedTeam={setSelectedTeam}
+          setModalPlayerVisible={setModalPlayerVisible}/>
           )
           )}
+      </ScrollView>
 
-      </View>
       {/* Modais */}
       <AddTeamModal 
       visible={modalTeamVisible}

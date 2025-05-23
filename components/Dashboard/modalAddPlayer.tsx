@@ -19,7 +19,7 @@ export default function ModalAddPlayer({ visible, onClose, teamId, onPlayerAdded
     await createPlayer(teamId, playerName);
     setPlayerName("");
     onClose();
-    onPlayerAdded(); // recarrega a lista se necessário
+    onPlayerAdded(); 
   };
 
   return (

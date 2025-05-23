@@ -1,5 +1,5 @@
 import { db } from '../firebase/config';
-import { collection, addDoc, Timestamp, getDocs } from 'firebase/firestore';
+import { collection, addDoc, Timestamp, getDocs, deleteDoc, doc } from 'firebase/firestore';
 
 export const createTeam = async(teamName: string) => {
     try{
@@ -25,6 +25,10 @@ export const createTeam = async(teamName: string) => {
         ...doc.data(),
       })) 
     }
+
+    export const deleteTeam = async (teamId: string) => {
+  await deleteDoc(doc(db, 'teams', teamId));
+};
 
 
 // TENHO QUE PENSAR AGORA EM COMO ESTRUTURAR O BANCO DE DADOS VISTO QUE O TIME VAI TER JOGADORES QUE VÃO TER ATRIBUTOS DIVERSOS PARA SEREM SALVOS
