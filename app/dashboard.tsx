@@ -1,6 +1,7 @@
 import AddPlayerModal from "@/components/Dashboard/modalAddPlayer";
 import AddTeamModal from "@/components/Dashboard/modalAddTeam";
 import { db } from "@/firebase/config";
+import { getPlayers } from "@/services/playersServices";
 import { createTeam } from "@/services/teamServices";
 import { collection, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
@@ -21,6 +22,9 @@ export default function Dashboard() {
   const [teamName, setTeamName] = useState("")
   const [playerName, setPlayerName] = useState("")
   const [teams, setTeams] = useState<Team[]>([])
+  const [selectedTeam, setSelectedTeam] = useState("")
+  
+
 
   const handleAddTeam = async (teamName : string) => {
       await createTeam(teamName)
@@ -62,7 +66,7 @@ export default function Dashboard() {
         </View>
 
         <View style={styles.buttonRow}>
-          <Button title="Adicionar Jogador" onPress={() => {setModalPlayerVisible(true)}} />
+          {/* <Button title="Adicionar Jogador" onPress={() => {setModalPlayerVisible(true)}} /> */}
           <Button title="Adicionar Equipe" onPress={() => {setModalTeamVisible(true)}}
            />
 
@@ -75,9 +79,16 @@ export default function Dashboard() {
 
           {teams.map((team)  => (
         <View style={styles.teamCard}>
-            <Text key={team.id}>
+            <Text key={team.id} style={styles.teamTitle}>
               {team.name}
             </Text>
+            <View style={styles.buttonRow}>
+              <Button title="Adicionar Jogador" onPress={() => {
+                setSelectedTeam(team.id)
+                setModalPlayerVisible(true)
+                }} />
+                <Button title="Ver Time" />
+          </View>
         </View>
           )
           )}
@@ -93,11 +104,10 @@ export default function Dashboard() {
       getTeams={getTeams}
         />
         <AddPlayerModal 
-        onClose = {() => {setModalPlayerVisible(false)}}
         visible={modalPlayerVisible}
-        onSave={()=> {handleAddPlayer}}
-        value={playerName}
-        onChange={setPlayerName}
+        onClose = {() => {setModalPlayerVisible(false)}}
+        teamId = {selectedTeam}
+        onPlayerAdded = {getPlayers}
         />
     </ScrollView>
   );
@@ -125,8 +135,17 @@ const styles = StyleSheet.create({
   teamCard: {
     backgroundColor: "#cde",
     padding: 10,
+    flex:1,
+    gap: 10,
+    alignItems: 'center',
     borderRadius: 8,
     marginBottom: 10,
+  },
+  teamTitle: {
+    flex: 1,
+    fontSize:18,
+    fontWeight: 'bold',
+
   },
   buttonRow: {
     flexDirection: "row",

@@ -1,47 +1,40 @@
-import { Modal, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { createPlayer } from "@/services/playersServices";
+import React, { useState } from "react";
+import { Modal, View, Text, TextInput, Button, StyleSheet } from "react-native";
 
-type Props = {
+
+type ModalAddPlayerProps = {
   visible: boolean;
   onClose: () => void;
-  onSave: () => void;
-  value: string;
-  onChange: (text: string) => void;
+  teamId: string; 
+  onPlayerAdded: () => void; 
 };
 
-export default function AddPlayerModal({ visible, onClose, onSave, value, onChange }: Props) {
+export default function ModalAddPlayer({ visible, onClose, teamId, onPlayerAdded }: ModalAddPlayerProps) {
+  const [playerName, setPlayerName] = useState("");
 
+  const handleSave = async () => {
+    if (!playerName.trim()) return;
+
+    await createPlayer(teamId, playerName);
+    setPlayerName("");
+    onClose();
+    onPlayerAdded(); // recarrega a lista se necessário
+  };
 
   return (
     <Modal visible={visible} animationType="slide" transparent>
-         <View style={styles.modalOverlay}>
+      <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
-          <Text style={styles.modalTitle}>Adicionar Jogador</Text>
+          <Text style={styles.title}>Adicionar Jogador</Text>
           <TextInput
+            placeholder="Nome do jogador"
             style={styles.input}
-            placeholder="Nome do Jogador"
-            value={value}
-            onChangeText={onChange}
+            value={playerName}
+            onChangeText={setPlayerName}
           />
-          <TextInput
-            style={styles.input}
-            placeholder="Nome do Jogador"
-            value={value}
-            onChangeText={onChange}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Nome do Jogador"
-            value={value}
-            onChangeText={onChange}
-          />
-          <View style={styles.modalButtons}>
-            <Pressable onPress={onSave} style={styles.modalButton}>
-              <Text>Salvar</Text>
-            </Pressable>
-            <Pressable onPress={onClose} style={styles.modalButton}>
-              <Text>Cancelar</Text>
-            </Pressable>
-          </View>
+          <Button title="Salvar" onPress={handleSave} />
+          <Button title="Cancelar" onPress={onClose} color="#aaa" />
         </View>
       </View>
     </Modal>
@@ -49,43 +42,27 @@ export default function AddPlayerModal({ visible, onClose, onSave, value, onChan
 }
 
 const styles = StyleSheet.create({
-  modalOverlay: {
+  modalContainer: {
     flex: 1,
-    backgroundColor: "#000000aa",
+    backgroundColor: "rgba(0,0,0,0.4)",
     justifyContent: "center",
     alignItems: "center",
   },
   modalContent: {
-    width: "90%",
-    backgroundColor: "#fff",
+    backgroundColor: "white",
+    padding: 24,
     borderRadius: 10,
-    padding: 20,
-    alignItems: "center",
+    width: "80%",
   },
-  modalTitle: {
-    fontSize: 22,
-    marginBottom: 15,
-    fontWeight: "bold",
+  title: {
+    fontSize: 18,
+    marginBottom: 12,
   },
   input: {
-    width: "100%",
     borderWidth: 1,
     borderColor: "#ccc",
-    borderRadius: 6,
     padding: 10,
-    marginBottom: 10,
-  },
-  modalButtons: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    width: "100%",
-    marginTop: 10,
-  },
-  modalButton: {
-    padding: 10,
-    backgroundColor: "#ddd",
+    marginBottom: 12,
     borderRadius: 6,
   },
 });
-
-
